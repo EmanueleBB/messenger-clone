@@ -4,20 +4,30 @@ import axios from "axios";
 
 import Button from "@/app/components/Button";
 import Input from "@/app/components/inputs/Input";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import {BsGithub,BsGoogle} from 'react-icons/bs'
 import AuthSocialButton from "./AuthSocialButton";
 import {toast} from "react-hot-toast";
-import {signIn} from "next-auth/react";
-import { callbackify } from "util";
+import {signIn, useSession} from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 type Variant = 'LOGIN' | 'REGISTER';
 
 const AuthForm = () => {
 
+   const session = useSession();
+   const router = useRouter();
    const [variant,setVariant] = useState<Variant>('LOGIN');
    const [isLoading,setIsLoading] = useState<boolean>(false);
+
+
+   //We check is the session exists and the user is authenticated
+   useEffect(()=>{
+      if(session?.status==='authenticated'){
+         router.push('/users')
+      }
+   },[session?.status,router])
 
    const toggleVariant = useCallback(()=>{
       if(variant === 'LOGIN'){
@@ -48,6 +58,7 @@ const AuthForm = () => {
 
          //If we are not using social signIn, and we are trying to create an account like in this case, we use the classical axios methods
          axios.post('/api/register',data)
+         .then(()=>signIn('credentials',data)) //we immediately sign in after register
          .catch(() => toast.error('Something went wrong'))
          .finally(()=>setIsLoading(false))
       }
@@ -66,6 +77,7 @@ const AuthForm = () => {
 
             if(callback?.ok && !callback?.error){
                toast.success('Logged in!')
+               router.push('/users')
             }
          })
          .finally(()=>setIsLoading(false));
