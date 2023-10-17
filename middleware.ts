@@ -8,7 +8,7 @@ import {withAuth} from 'next-auth/middleware';
 export default withAuth({
    pages:{
       signIn:"/"
-   }
+   },
 })
 
 //we protect all the paths inside users. The matcher, in middleware.ts allows you to filter Middleware to run on specific paths

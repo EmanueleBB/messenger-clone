@@ -16,6 +16,7 @@ export async function POST(
 
       //first we make sure that all the field are full
       if(!email || !name || !password){
+         
          return new NextResponse('Missing infos', {status:400})
       }
 

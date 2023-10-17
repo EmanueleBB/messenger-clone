@@ -29,6 +29,7 @@ const AuthForm = () => {
       }
    },[session?.status,router])
 
+
    const toggleVariant = useCallback(()=>{
       if(variant === 'LOGIN'){
          setVariant('REGISTER');
@@ -113,6 +114,7 @@ const AuthForm = () => {
                sm:px-10
             "
          >
+            
             <form
                className="space-y-6"
                onSubmit={handleSubmit(onSubmit)}
