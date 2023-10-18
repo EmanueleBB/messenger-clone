@@ -83,7 +83,7 @@ const ConversationBox:React.FC<ConversationBoxProps> = ({
             cursor-pointer
             p-3
          `,
-            selected? "bg-neutral-500" : "bg-white"
+            selected? "bg-neutral-100" : "bg-white"
          )}
       >  
          <Avatar user={otherUser}/>
