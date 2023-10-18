@@ -14,6 +14,7 @@ export default withAuth({
 //we protect all the paths inside users. The matcher, in middleware.ts allows you to filter Middleware to run on specific paths
 export const config = {
    matcher:[
-      "/users/:path*"
+      "/users/:path*",
+      "/conversations/:path*"
    ]
 }
