@@ -1,6 +1,7 @@
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import { NextResponse } from "next/server";
-import prisma from '@/app/libs/prismadb'
+import prisma from '@/app/libs/prismadb';
+import { pusherServer } from "@/app/libs/pusher";
 
 export async function POST(
    request:Request
@@ -65,6 +66,18 @@ export async function POST(
             }
          }
       });
+
+      await pusherServer.trigger(conversationId,'messages:new',newMessage);
+
+      const lastMessage=updatedConversation.messages[updatedConversation.messages.length-1]
+
+      //This is needed for the sidebar, we update the last message for every user that received the message
+      updatedConversation.users.map((user)=>{
+         pusherServer.trigger(user.email!,'conversation:update',{
+            id:conversationId,
+            messages:[lastMessage]
+         })
+      })
 
       return NextResponse.json(newMessage);
 
